@@ -1,0 +1,12 @@
+package: github.com/moneysmartco/drone-vault-exporter
+import:
+- package: github.com/hashicorp/vault
+  version: ~0.9.3
+  subpackages:
+  - api
+- package: github.com/joho/godotenv
+  version: ~1.2.0
+  subpackages:
+  - autoload
+- package: github.com/urfave/cli
+  version: ~1.20.0
