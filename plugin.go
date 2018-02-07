@@ -81,6 +81,8 @@ func (p Plugin) Exec() error {
 		return fmt.Errorf(noSuchVaultKeyPath)
 	}
 
+	fmt.Printf("%d items in '%s'\n", len(secret.Data), p.Config.VaultKeyPath)
+
 	// Write to file
 	f, err := os.OpenFile(p.Config.DeployEnvPath, os.O_CREATE|os.O_WRONLY, 0600)
 	if err != nil {
@@ -88,7 +90,9 @@ func (p Plugin) Exec() error {
 	}
 	defer f.Close()
 
+	fmt.Printf("Writing into '%s'...\n", p.Config.DeployEnvPath)
 	for k, v := range secret.Data {
+		fmt.Printf("  - %s\n", k)
 		fmt.Fprintf(f, fmt.Sprintf("%s=%s\n", k, v))
 	}
 
