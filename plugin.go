@@ -84,7 +84,7 @@ func (p Plugin) Exec() error {
 	fmt.Printf("%d items in '%s'\n", len(secret.Data), p.Config.VaultKeyPath)
 
 	// Write to file
-	f, err := os.OpenFile(p.Config.DeployEnvPath, os.O_CREATE|os.O_WRONLY, 0600)
+	f, err := os.OpenFile(p.Config.DeployEnvPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
 	if err != nil {
 		return err
 	}
