@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"os"
 
-	// "github.com/appleboy/easyssh-proxy"
 	"github.com/joho/godotenv"
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/urfave/cli"
