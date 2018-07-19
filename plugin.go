@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/hashicorp/vault/api"
 )
@@ -93,7 +94,9 @@ func (p Plugin) Exec() error {
 	fmt.Printf("Writing into '%s'...\n", p.Config.DeployEnvPath)
 	for k, v := range secret.Data {
 		fmt.Printf("  - %s\n", k)
-		fmt.Fprintf(f, fmt.Sprintf("%s=%s\n", k, v))
+
+		v = strings.Replace(fmt.Sprintf("%s", v), "\n", "\\n", -1)
+		fmt.Fprintf(f, fmt.Sprintf("%s='%s'\n", k, v))
 	}
 
 	return nil
