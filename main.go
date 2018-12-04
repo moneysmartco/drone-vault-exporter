@@ -70,6 +70,18 @@ func main() {
 			Value:  ".deploy.env",
 		},
 		cli.StringFlag{
+			Name:   "output-format",
+			Usage:  "Format to be saved, dotenv / helm-yaml",
+			EnvVar: "PLUGIN_OUTPUT_FORMAT",
+			Value:  "dotenv",
+		},
+		cli.StringFlag{
+			Name:   "helm-env-key",
+			Usage:  "Helm key for env vars",
+			EnvVar: "PLUGIN_HELM_ENV_KEY",
+			Value:  "env",
+		},
+		cli.StringFlag{
 			Name:  "env-file",
 			Usage: "source env file",
 		},
@@ -121,6 +133,8 @@ func run(c *cli.Context) error {
 			VaultSecretID:   c.String("vault-secret-id"),
 			VaultKeyPath:    c.String("vault-key-path"),
 			DeployEnvPath:   c.String("deploy-env-path"),
+			HelmEnvKey:      c.String("helm-env-key"),
+			OutputFormat:    c.String("output-format"),
 		},
 	}
 
