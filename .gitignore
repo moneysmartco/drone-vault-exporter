@@ -30,4 +30,5 @@ drone-vault-exporter
 .cover
 vendor
 
+# default output
 .deploy.env

@@ -37,6 +37,23 @@ pipeline:
 +     - vault_secret_id
 ```
 
+Example configuration in your `.drone.yml` file for exporting in helm-yaml format:
+
+```diff
+pipeline:
+  export_envvar:
+    image: moneysmartco/drone-vault-exporter:0.0.1
+    vault_key_path: secret/app_env/staging/api_server
++   output_format: helm-yaml
++   deploy_env_path: env.yaml
+    vault_auth_method: APPROLE
+    secrets:
+      - vault_addr
+      - vault_token
+      - vault_role_id
+      - vault_secret_id
+```
+
 # Parameter Reference
 
 vault_key_path
@@ -47,6 +64,12 @@ deploy_env_path
 
 vault_auth_method (optional)
 : auth method to be use on connecting vault server
+
+output_format (optional)
+: fileformat to be saved, helm-yaml / dotenv (default)
+
+helm_env_key (optional)
+: Helm key for env vars (default: `envs`)
 
 
 # Secret Reference

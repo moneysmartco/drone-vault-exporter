@@ -38,6 +38,20 @@ docker run --rm \
 docker run --rm \
   -e PLUGIN_DEPLOY_ENV_PATH=./.deploy.env \
   -e PLUGIN_VAULT_KEY_PATH=secret/key/path \
+  -e VAULT_ADDR=https://vault.server \
+  -e PLUGIN_VAULT_AUTH_METHOD=APPROLE \
+  -e VAULT_ROLE_ID=xxx-xxx-xxx-xxx-xxx \
+  -e VAULT_SECRET_ID=xxx-xxx-xxx-xxx-xxx \
+  moneysmartco/drone-vault-exporter
+```
+
+3) output with helm-yaml format
+```sh
+docker run --rm \
+  -e PLUGIN_OUTPUT_FORMAT=helm-yaml \
+  -e PLUGIN_HELM_ENV_KEY=envs \
+  -e PLUGIN_DEPLOY_ENV_PATH=./env.yaml \
+  -e PLUGIN_VAULT_KEY_PATH=secret/key/path \
   -e PLUGIN_VAULT_AUTH_METHOD=APPROLE \
   -e VAULT_ADDR=https://vault.server \
   -e VAULT_ROLE_ID=xxx-xxx-xxx-xxx-xxx \

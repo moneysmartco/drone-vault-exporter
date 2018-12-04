@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"sort"
 	"strings"
 
 	"github.com/hashicorp/vault/api"
@@ -13,6 +14,7 @@ const (
 	noSuchVaultKeyPath = "no such vault key path"
 	nilResponse        = "got nil response"
 	emptyClientToken   = "got empty client token"
+	noSuchOutputFormat = "not support such output format"
 )
 
 type (
@@ -25,6 +27,8 @@ type (
 		VaultSecretID   string
 		VaultKeyPath    string
 		DeployEnvPath   string
+		HelmEnvKey      string
+		OutputFormat    string
 	}
 
 	// Plugin structure
@@ -82,7 +86,17 @@ func (p Plugin) Exec() error {
 		return fmt.Errorf(noSuchVaultKeyPath)
 	}
 
+	// Sort
+	secretKeys := make([]string, 0)
+	for k := range secret.Data {
+		secretKeys = append(secretKeys, k)
+	}
+	sort.Strings(secretKeys)
+
 	fmt.Printf("%d items in '%s'\n", len(secret.Data), p.Config.VaultKeyPath)
+	for _, k := range secretKeys {
+		fmt.Printf("  - %s\n", k)
+	}
 
 	// Write to file
 	f, err := os.OpenFile(p.Config.DeployEnvPath, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0600)
@@ -91,12 +105,27 @@ func (p Plugin) Exec() error {
 	}
 	defer f.Close()
 
-	fmt.Printf("Writing into '%s'...\n", p.Config.DeployEnvPath)
-	for k, v := range secret.Data {
-		fmt.Printf("  - %s\n", k)
+	// Output file in different formats
+	fmt.Printf("Writing into '%s' (format: %s)...\n", p.Config.DeployEnvPath, p.Config.OutputFormat)
+	if p.Config.OutputFormat == "dotenv" {
+		// dotenv format
+		for _, k := range secretKeys {
+			v := secret.Data[k]
 
-		v = strings.Replace(fmt.Sprintf("%s", v), "\n", "\\n", -1)
-		fmt.Fprintf(f, fmt.Sprintf("%s='%s'\n", k, v))
+			v = strings.Replace(fmt.Sprintf("%s", v), "\n", "\\n", -1)
+			fmt.Fprintf(f, fmt.Sprintf("%s='%s'\n", k, v))
+		}
+	} else if p.Config.OutputFormat == "helm-yaml" {
+		// yaml format, basically for helm values.yaml
+		fmt.Fprintf(f, fmt.Sprintf("%s:\n", p.Config.HelmEnvKey))
+		for _, k := range secretKeys {
+			v := secret.Data[k]
+
+			v = strings.Replace(fmt.Sprintf("%s", v), "\n", "\\n", -1)
+			fmt.Fprintf(f, fmt.Sprintf("  %s: \"%s\"\n", k, v))
+		}
+	} else {
+		return fmt.Errorf(noSuchOutputFormat)
 	}
 
 	return nil
