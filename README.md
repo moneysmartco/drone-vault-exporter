@@ -49,7 +49,7 @@ docker run --rm \
 ```sh
 docker run --rm \
   -e PLUGIN_OUTPUT_FORMAT=helm-yaml \
-  -e PLUGIN_HELM_ENV_KEY=env \
+  -e PLUGIN_HELM_ENV_KEY=envs \
   -e PLUGIN_DEPLOY_ENV_PATH=./env.yaml \
   -e PLUGIN_VAULT_KEY_PATH=secret/key/path \
   -e PLUGIN_VAULT_AUTH_METHOD=APPROLE \

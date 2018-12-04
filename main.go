@@ -79,7 +79,7 @@ func main() {
 			Name:   "helm-env-key",
 			Usage:  "Helm key for env vars",
 			EnvVar: "PLUGIN_HELM_ENV_KEY",
-			Value:  "env",
+			Value:  "envs",
 		},
 		cli.StringFlag{
 			Name:  "env-file",

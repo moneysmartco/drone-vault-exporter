@@ -69,7 +69,7 @@ output_format (optional)
 : fileformat to be saved, helm-yaml / dotenv (default)
 
 helm_env_key (optional)
-: Helm key for env vars (default: `env`)
+: Helm key for env vars (default: `envs`)
 
 
 # Secret Reference
