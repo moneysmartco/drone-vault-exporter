@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"sort"
+	"strconv"
 	"strings"
 
 	"github.com/hashicorp/vault/api"
@@ -112,7 +113,14 @@ func (p Plugin) Exec() error {
 		for _, k := range secretKeys {
 			v := secret.Data[k]
 
+			// Convert to string if boolean
+			if _, ok := v.(bool); ok {
+				v = strconv.FormatBool(v.(bool))
+			}
+
 			v = strings.Replace(fmt.Sprintf("%s", v), "\n", "\\n", -1)
+			v = strings.Replace(fmt.Sprintf("%s", v), "\r", "\\r", -1)
+			v = strings.Replace(fmt.Sprintf("%s", v), "%", "%%", -1)
 			fmt.Fprintf(f, fmt.Sprintf("%s='%s'\n", k, v))
 		}
 	} else if p.Config.OutputFormat == "helm-yaml" {
